@@ -26,6 +26,65 @@ function tick() {
 	// show new state
 	showBoard();
 }
+function calculateNextGen() {
+	const newModel = [];
+	for (let i = 0; i < GRID_ROWS; i++) {
+		const newRow = [];
+		for (let j = 0; j < GRID_COLS; j++) {
+			switch (model[i][j]) {
+				case FIRE:
+					// Fire burns out, becomes burned
+					newRow.push(BURNED);
+					break;
+				case GRASS:
+					// Check if any nearby cell is on fire with some randomness
+					let hasFireNeighbor = false;
+					const spreadRadius = 2; // Radius of circular spread
+					const noiseThreshold = 0.4; // Threshold for noise
+					for (let dx = -spreadRadius; dx <= spreadRadius; dx++) {
+						for (let dy = -spreadRadius; dy <= spreadRadius; dy++) {
+							const newRowPos = i + dx;
+							const newColPos = j + dy;
+							// Ensure neighbor cell is within bounds
+							if (
+								newRowPos >= 0 &&
+								newRowPos < GRID_ROWS &&
+								newColPos >= 0 &&
+								newColPos < GRID_COLS
+							) {
+								// Check if neighbor cell is on fire with some randomness
+								if (
+									model[newRowPos][newColPos] === FIRE &&
+									Math.random() < noiseThreshold
+								) {
+									hasFireNeighbor = true;
+									break;
+								}
+							}
+						}
+						if (hasFireNeighbor) break;
+					}
+					// If adjacent cell is on fire with randomness, grass catches fire
+					if (hasFireNeighbor) {
+						newRow.push(FIRE);
+					} else {
+						newRow.push(GRASS);
+					}
+					break;
+				default:
+					// Copy existing state for burned, bush, and tree cells
+					newRow.push(model[i][j]);
+					break;
+			}
+		}
+		newModel.push(newRow);
+	}
+	// Update the model with the new generation
+	model.length = 0; // Clear the existing model
+	for (let i = 0; i < newModel.length; i++) {
+		model.push(newModel[i].slice()); // Copy new generation to model
+	}
+}
 
 //#endregion
 
@@ -110,68 +169,8 @@ function boardClicked(event) {
 		const index = cell.dataset.index;
 		model[Math.floor(index / GRID_COLS)][index % GRID_COLS] = FIRE;
 		showBoard();
-		tick();
 	}
-}
-
-function calculateNextGen() {
-	const newModel = [];
-	for (let i = 0; i < GRID_ROWS; i++) {
-		const newRow = [];
-		for (let j = 0; j < GRID_COLS; j++) {
-			switch (model[i][j]) {
-				case FIRE:
-					// Fire burns out, becomes burned
-					newRow.push(BURNED);
-					break;
-				case GRASS:
-					// Check if any nearby cell is on fire with some randomness
-					let hasFireNeighbor = false;
-					const spreadRadius = 2; // Radius of circular spread
-					const noiseThreshold = 0.4; // Threshold for noise
-					for (let dx = -spreadRadius; dx <= spreadRadius; dx++) {
-						for (let dy = -spreadRadius; dy <= spreadRadius; dy++) {
-							const newRowPos = i + dx;
-							const newColPos = j + dy;
-							// Ensure neighbor cell is within bounds
-							if (
-								newRowPos >= 0 &&
-								newRowPos < GRID_ROWS &&
-								newColPos >= 0 &&
-								newColPos < GRID_COLS
-							) {
-								// Check if neighbor cell is on fire with some randomness
-								if (
-									model[newRowPos][newColPos] === FIRE &&
-									Math.random() < noiseThreshold
-								) {
-									hasFireNeighbor = true;
-									break;
-								}
-							}
-						}
-						if (hasFireNeighbor) break;
-					}
-					// If adjacent cell is on fire with randomness, grass catches fire
-					if (hasFireNeighbor) {
-						newRow.push(FIRE);
-					} else {
-						newRow.push(GRASS);
-					}
-					break;
-				default:
-					// Copy existing state for burned, bush, and tree cells
-					newRow.push(model[i][j]);
-					break;
-			}
-		}
-		newModel.push(newRow);
-	}
-	// Update the model with the new generation
-	model.length = 0; // Clear the existing model
-	for (let i = 0; i < newModel.length; i++) {
-		model.push(newModel[i].slice()); // Copy new generation to model
-	}
+	tick();
 }
 
 //#endregion
