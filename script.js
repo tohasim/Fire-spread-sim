@@ -2,8 +2,8 @@
 
 //#region CONTROLLER
 window.addEventListener("load", start);
-const GRID_ROWS = 100;
-const GRID_COLS = 100;
+const GRID_ROWS = 30;
+const GRID_COLS = 50;
 const tickTimer = 500;
 
 let shouldTick = false;
@@ -37,6 +37,8 @@ function calculateNextGen() {
 					newRow.push(BURNED);
 					break;
 				case GRASS:
+				case TREE:
+				case BUSH:
 					// Check if any nearby cell is on fire with some randomness
 					let hasFireNeighbor = false;
 					const spreadRadius = 2; // Radius of circular spread
@@ -68,7 +70,7 @@ function calculateNextGen() {
 					if (hasFireNeighbor) {
 						newRow.push(FIRE);
 					} else {
-						newRow.push(GRASS);
+						newRow.push(model[i][j]);
 					}
 					break;
 				default:
@@ -155,7 +157,16 @@ function setupModel() {
 	for (let i = 0; i < GRID_ROWS; i++) {
 		const row = [];
 		for (let j = 0; j < GRID_COLS; j++) {
-			row.push(GRASS);
+			let randomNumber = Math.floor(Math.random() * 10) + 1;
+			if (randomNumber < 7) {
+				row.push(GRASS);
+			} else if (randomNumber > 6 && randomNumber < 10  ) {
+				row.push(BUSH);
+
+			} else {
+				row.push(TREE)
+			}
+			
 		}
 		model.push(row);
 	}
