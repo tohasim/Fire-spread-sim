@@ -9,7 +9,7 @@
 
 .cell {
 	border-radius: 100%;
-	width: 32px;
+	width: 16px;
 	aspect-ratio: 1 / 1;
 	font-size: 300%;
 	display: flex;
@@ -19,25 +19,20 @@
 
 .grass {
 	background-color: green;
-
-	
-	
-   
 }
 
 .bush {
 	background-image: url(images/Bush.png); /* Provide the correct path to your tree image */
-    background-size: cover; /* This ensures that the image covers the cell entirely */
-    width: 100%; /* Set to the desired width, 100% makes it fill the cell */
-    height: 100%; /* Set to the desired height, 100% makes it fill the cell */
+	background-size: cover; /* This ensures that the image covers the cell entirely */
+	width: 100%; /* Set to the desired width, 100% makes it fill the cell */
+	height: 100%; /* Set to the desired height, 100% makes it fill the cell */
 }
 
 .tree {
 	background-image: url(images/tree.png); /* Provide the correct path to your tree image */
-    background-size: cover; /* This ensures that the image covers the cell entirely */
-    width: 100%; /* Set to the desired width, 100% makes it fill the cell */
-    height: 100%; /* Set to the desired height, 100% makes it fill the cell */
-    
+	background-size: cover; /* This ensures that the image covers the cell entirely */
+	width: 100%; /* Set to the desired width, 100% makes it fill the cell */
+	height: 100%; /* Set to the desired height, 100% makes it fill the cell */
 }
 
 /* first fire effect */
@@ -88,19 +83,20 @@
 */
 
 @keyframes flicker {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
-  }
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.6;
+	}
+}
 
-  .fire {
-    background-color: orange;
-    box-shadow: 0 0 8px 2px red; /* Glowing effect */
-    animation: flicker 0.5s infinite alternate;
-  }
-
-
-  
-
+.fire {
+	background-color: orange;
+	box-shadow: 0 0 8px 2px red; /* Glowing effect */
+	animation: flicker 0.5s infinite alternate;
+}
 
 .burned {
 	background-color: black;
